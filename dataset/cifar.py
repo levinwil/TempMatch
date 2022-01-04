@@ -191,7 +191,7 @@ class PseudoSSL(Dataset):
     return len(self.data)
 
   def __getitem__(self, index):
-    img, target = self.data[index], self.targets[index]
+    img, target = self.data[index], np.array(self.targets)[index]
 
     return img, target
 

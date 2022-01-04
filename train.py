@@ -363,7 +363,8 @@ def train(args, labeled_trainloader, unlabeled_trainloader, test_loader,
       inputs_total = torch.cat((inputs_x, inputs_u_w), dim=0)
 
       model_with_temperature = ModelWithTemperature(model)
-      pseudolabeled_dataset = DATASET_GETTERS['pseudossl'](inputs_total, targets_total)
+      pseudolabeled_dataset = DATASET_GETTERS['pseudossl'](inputs_total.cpu().detach(),
+                                                           targets_total.cpu().detach())
       pseudolabeled_trainloader = DataLoader(pseudolabeled_dataset,
                                              sampler=SequentialSampler(pseudolabeled_dataset),
                                              batch_size=args.batch_size,
