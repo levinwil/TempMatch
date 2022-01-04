@@ -59,7 +59,7 @@ class ModelWithTemperature(nn.Module):
           (before_temperature_nll, before_temperature_ece))
 
     # Next: optimize the temperature w.r.t. NLL
-    optimizer = optim.Adam([self.temperature], lr=3e-4, max_iter=500)
+    optimizer = optim.Adam([self.temperature], lr=3e-4)
 
     def eval():
       optimizer.zero_grad()
@@ -67,7 +67,8 @@ class ModelWithTemperature(nn.Module):
       loss.backward()
       return loss
 
-    optimizer.step(eval)
+    for epoch in range(10):
+      optimizer.step(eval)
 
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
