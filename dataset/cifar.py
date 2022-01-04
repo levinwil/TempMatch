@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 from torchvision import datasets
 from torchvision import transforms
+from torch.utils.data import Dataset
 
 from .randaugment import RandAugmentMC
 
@@ -178,13 +179,13 @@ class CIFAR100SSL(datasets.CIFAR100):
     return img, target
 
 
-class PseudoSSL(datasets):
+class PseudoSSL(Dataset):
 
   def __init__(self,
                data,
                targets):
-      self.data = data
-      self.targets = np.array(targets)
+    self.data = data
+    self.targets = np.array(targets)
 
   def __getitem__(self, index):
     img, target = self.data[index], self.targets[index]
