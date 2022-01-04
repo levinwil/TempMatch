@@ -359,8 +359,8 @@ def train(args, labeled_trainloader, unlabeled_trainloader, test_loader,
 
       pseudo_label = torch.softmax(logits_u_w.detach(), dim=-1)
       max_probs, targets_u = torch.max(pseudo_label, dim=-1)
-      targets_total = torch.cat(targets_x, targets_u, dim=0)
-      inputs_total = torch.cat(inputs_x, inputs_u_w, dim=0)
+      targets_total = torch.cat((targets_x, targets_u), dim=0)
+      inputs_total = torch.cat((inputs_x, inputs_u_w), dim=0)
 
       model_with_temperature = ModelWithTemperature(model)
       pseudolabeled_trainloader = DATASET_GETTERS['pseudossl'](inputs_total, targets_total)
