@@ -181,7 +181,7 @@ class CIFAR100SSL(datasets.CIFAR100):
 class PseudoSSL(datasets):
 
   def __init__(self,
-               data
+               data,
                targets):
       self.data = data
       self.targets = np.array(targets)
