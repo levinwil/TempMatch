@@ -63,7 +63,6 @@ class ModelWithTemperature(nn.Module):
 
     for epoch in range(10):
       optimizer.zero_grad()   # zero the gradient buffers
-      output = net(input)
       loss = nll_criterion(self.temperature_scale(logits), labels)
       loss.backward()
       optimizer.step()    # Does the update
