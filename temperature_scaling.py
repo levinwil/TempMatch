@@ -59,7 +59,7 @@ class ModelWithTemperature(nn.Module):
           (before_temperature_nll, before_temperature_ece))
 
     # Next: optimize the temperature w.r.t. NLL
-    optimizer = optim.LBFGS([self.temperature], lr=0.01, max_iter=500)
+    optimizer = optim.Adam([self.temperature], lr=3e-4, max_iter=500)
 
     def eval():
       optimizer.zero_grad()
