@@ -316,6 +316,8 @@ def train(args, labeled_trainloader, unlabeled_trainloader, test_loader,
   labeled_iter = iter(labeled_trainloader)
   unlabeled_iter = iter(unlabeled_trainloader)
 
+  T = 1
+
   model.train()
   for epoch in range(args.start_epoch, args.epochs):
     batch_time = AverageMeter()
@@ -357,20 +359,21 @@ def train(args, labeled_trainloader, unlabeled_trainloader, test_loader,
       logits_u_w, logits_u_s = logits[batch_size:].chunk(2)
       del logits
 
-      pseudo_label = torch.softmax(logits_u_w.detach(), dim=-1)
-      max_probs, targets_u = torch.max(pseudo_label, dim=-1)
-      targets_total = torch.cat((targets_x, targets_u), dim=0)
-      inputs_total = torch.cat((inputs_x, inputs_u_w), dim=0)
+      if batch_idx % 100 == 0:
+        pseudo_label = torch.softmax(logits_u_w.detach(), dim=-1)
+        max_probs, targets_u = torch.max(pseudo_label, dim=-1)
+        targets_total = torch.cat((targets_x, targets_u), dim=0)
+        inputs_total = torch.cat((inputs_x, inputs_u_w), dim=0)
 
-      model_with_temperature = ModelWithTemperature(model)
-      pseudolabeled_dataset = DATASET_GETTERS['pseudossl'](inputs_total.cpu().detach(),
-                                                           targets_total.cpu().detach())
-      pseudolabeled_trainloader = DataLoader(pseudolabeled_dataset,
-                                             sampler=SequentialSampler(pseudolabeled_dataset),
-                                             batch_size=args.batch_size,
-                                             num_workers=args.num_workers)
-      model_with_temperature.set_temperature(pseudolabeled_trainloader)
-      T = model_with_temperature.temperature.item()
+        model_with_temperature = ModelWithTemperature(model)
+        pseudolabeled_dataset = DATASET_GETTERS['pseudossl'](inputs_total.cpu().detach(),
+                                                            targets_total.cpu().detach())
+        pseudolabeled_trainloader = DataLoader(pseudolabeled_dataset,
+                                              sampler=SequentialSampler(pseudolabeled_dataset),
+                                              batch_size=args.batch_size,
+                                              num_workers=args.num_workers)
+        model_with_temperature.set_temperature(pseudolabeled_trainloader)
+        T = model_with_temperature.temperature.item()
 
       Lx = F.cross_entropy(logits_x, targets_x, reduction='mean')
 
