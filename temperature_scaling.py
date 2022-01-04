@@ -15,7 +15,7 @@ class ModelWithTemperature(nn.Module):
   def __init__(self, model):
     super(ModelWithTemperature, self).__init__()
     self.model = model
-    self.temperature = nn.Parameter(torch.ones(1) * 1.5)
+    self.temperature = nn.Parameter(torch.ones(1))
 
   def forward(self, input):
     logits = self.model(input)
@@ -59,16 +59,14 @@ class ModelWithTemperature(nn.Module):
           (before_temperature_nll, before_temperature_ece))
 
     # Next: optimize the temperature w.r.t. NLL
-    optimizer = optim.Adam([self.temperature], lr=3e-4)
-
-    def eval():
-      optimizer.zero_grad()
-      loss = nll_criterion(self.temperature_scale(logits), labels)
-      loss.backward()
-      return loss
+    optimizer = optim.SGD([self.temperature], lr=0.02, momentum=0.9)
 
     for epoch in range(10):
-      optimizer.step(eval)
+      optimizer.zero_grad()   # zero the gradient buffers
+      output = net(input)
+      loss = nll_criterion(self.temperature_scale(logits), labels)
+      loss.backward()
+      optimizer.step()    # Does the update
 
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
