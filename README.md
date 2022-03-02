@@ -21,5 +21,3 @@ The TempMatch algorithm is heavily inspired by FixMatch:
     year={2020},
 }
 ```
-
-The source code is heavily based on [https://github.com/kekmodel/FixMatch-pytorch](https://github.com/kekmodel/FixMatch-pytorch)
