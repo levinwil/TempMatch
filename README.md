@@ -1,4 +1,5 @@
 # TempMatch
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
 `TempMatch` (**Temp**eratue **Match**) is a package for exploring and using the Semi-Supervised learning algorithm developed by [Clarifai](https://clarifai.com)
 
 Some system/package requirements:
