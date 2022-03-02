@@ -20,7 +20,7 @@ from tqdm import tqdm
 from dataset.cifar import DATASET_GETTERS
 from utils import AverageMeter, accuracy
 
-from temperature_scaling import ModelWithTemperature
+from utils.temperature_scaling import ModelWithTemperature
 
 logger = logging.getLogger(__name__)
 best_acc = 0
