@@ -4,6 +4,7 @@
 `TempMatch` (**Temp**eratue **Match**) is a package for exploring and using the Semi-Supervised learning algorithm developed by [Clarifai](https://clarifai.com)
 
 * **Benchmark Results**: [https://github.com/levinwil/TempMatch/tree/main/benchmarks](https://github.com/levinwil/TempMatch/tree/main/benchmarks)
+* **Issues**: [https://github.com/levinwil/TempMatch/issues](https://github.com/levinwil/TempMatch/issues)
 
 Some system/package requirements:
 * **Python**: 3.6+
