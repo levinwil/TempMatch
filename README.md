@@ -11,7 +11,7 @@ Some system/package requirements:
 * **Dependencies**: numpy, torch, pillow, tqdm
 
 ## Citations
-This algorithm is heavily inspired by FixMatch:
+The TempMatch algorithm is heavily inspired by FixMatch:
 ```
 @article{sohn2020fixmatch,
     title={FixMatch: Simplifying Semi-Supervised Learning with Consistency and Confidence},
