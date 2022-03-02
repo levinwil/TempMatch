@@ -8,14 +8,6 @@ Some system/package requirements:
 * **OS**: All major platforms (Linux, MacOS, Windows)
 * **Dependencies**: numpy, torch, pillow, tqdm
 
-## Results
-
-### CIFAR10
-| #Labels | 40 | 250 | 4000 | Full Dataset |
-|:---:|:---:|:---:|:---:|:---:|
-| FixMatch | 86.19 | 94.93 | 95.74 | 96.21 |
-| This code | 91.45 | 95.46 | 95.98 | 96.21 |
-
 ## Citations
 This algorithm is heavily inspired by FixMatch:
 ```
