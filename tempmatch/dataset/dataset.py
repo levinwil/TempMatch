@@ -227,6 +227,7 @@ class SVHNSSL(datasets.SVHN):
     if indexs is not None:
       self.data = self.data[indexs]
       self.labels = np.array(self.labels)[indexs]
+    self.data = self.data.transpose([0, 2, 3, 1])
 
   def __getitem__(self, index):
     img, target = self.data[index], self.labels[index]
