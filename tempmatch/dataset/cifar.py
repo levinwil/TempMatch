@@ -17,6 +17,8 @@ cifar100_mean = (0.5071, 0.4867, 0.4408)
 cifar100_std = (0.2675, 0.2565, 0.2761)
 normal_mean = (0.5, 0.5, 0.5)
 normal_std = (0.5, 0.5, 0.5)
+svhn_mean = (0.4380, 0.4440, 0.4730)
+svhn_std = (0.1751, 0.1771, 0.1744)
 
 
 def get_cifar10(args, root):
@@ -47,6 +49,35 @@ def get_cifar10(args, root):
 
   test_dataset = datasets.CIFAR10(
       root, train=False, transform=transform_val, download=False)
+
+  return train_labeled_dataset, train_unlabeled_dataset, test_dataset
+
+
+def get_svhn(args, root):
+  transform_labeled = transforms.Compose([
+      transforms.RandomHorizontalFlip(),
+      transforms.RandomCrop(size=32, padding=int(32 * 0.125), padding_mode='reflect'),
+      transforms.ToTensor(),
+      transforms.Normalize(mean=svhn_mean, std=svhn_std)
+  ])
+  transform_val = transforms.Compose(
+      [transforms.ToTensor(),
+       transforms.Normalize(mean=svhn_mean, std=svhn_std)])
+  base_dataset = datasets.CIFAR10(root, train=True, download=True)
+
+  train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.targets)
+
+  train_labeled_dataset = SVHNSSL(root,
+                                     train_labeled_idxs,
+                                     train=True,
+                                     transform=transform_labeled)
+
+  train_unlabeled_dataset = SVHNSSL(root,
+                                    train_unlabeled_idxs,
+                                    train=True,
+                                    transform=TransformFixMatch(mean=svhn_mean, std=svhn_std))
+
+  test_dataset = datasets.SVHN(root, train=False, transform=transform_val, download=False)
 
   return train_labeled_dataset, train_unlabeled_dataset, test_dataset
 
@@ -179,6 +210,37 @@ class CIFAR100SSL(datasets.CIFAR100):
     return img, target
 
 
+class SVHNSSL(datasets.SVHN):
+
+  def __init__(self,
+               root,
+               indexs,
+               train=True,
+               transform=None,
+               target_transform=None,
+               download=False):
+    super().__init__(root,
+                     train=train,
+                     transform=transform,
+                     target_transform=target_transform,
+                     download=download)
+    if indexs is not None:
+      self.data = self.data[indexs]
+      self.targets = np.array(self.targets)[indexs]
+
+  def __getitem__(self, index):
+    img, target = self.data[index], self.targets[index]
+    img = Image.fromarray(img)
+
+    if self.transform is not None:
+      img = self.transform(img)
+
+    if self.target_transform is not None:
+      target = self.target_transform(target)
+
+    return img, target
+
+
 class PseudoSSL(Dataset):
 
   def __init__(self,
@@ -198,4 +260,5 @@ class PseudoSSL(Dataset):
 
 DATASET_GETTERS = {'cifar10': get_cifar10,
                    'cifar100': get_cifar100,
+                   'svhn': get_svhn
                    'pseudossl': PseudoSSL}
