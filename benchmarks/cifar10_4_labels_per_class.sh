@@ -1,1 +1,1 @@
-python ../tempmatch/train.py --dataset cifar10 --num-labeled 40 --arch wideresnet --batch-size 64 --lr 0.03 --expand-labels --out model_checkpoints/cifar10@40
+python ../tempmatch/train.py --dataset cifar10 --num-labeled 40 --arch wideresnet --batch-size 64 --lr 0.03 --expand-labels --seed 6 --out model_checkpoints/cifar10@40

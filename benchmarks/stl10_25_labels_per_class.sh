@@ -1,1 +1,1 @@
-python ../tempmatch/train.py --dataset stl10 --num-labeled 250 --arch wideresnet --batch-size 64 --lr 0.03 --expand-labels --out model_checkpoints/stl10@250
+python ../tempmatch/train.py --dataset stl10 --num-labeled 250 --arch wideresnet --batch-size 64 --lr 0.03 --expand-labels --seed 5 --out model_checkpoints/stl10@250
