@@ -65,10 +65,7 @@ def get_svhn(args, root):
        transforms.Normalize(mean=svhn_mean, std=svhn_std)])
   base_dataset = datasets.SVHN(root, split="train", download=True)
 
-  from pprint import pprint
-  pprint(vars(base_dataset))
-
-  train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.targets)
+  train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.labels)
 
   train_labeled_dataset = SVHNSSL(root,
                                   train_labeled_idxs,
