@@ -19,6 +19,8 @@ normal_mean = (0.5, 0.5, 0.5)
 normal_std = (0.5, 0.5, 0.5)
 svhn_mean = (0.4380, 0.4440, 0.4730)
 svhn_std = (0.1751, 0.1771, 0.1744)
+stl10_mean = [x / 255 for x in [112.4, 109.1, 98.6]]
+stl10_std = [x / 255 for x in [68.4, 66.6, 68.5]]
 
 
 def get_cifar10(args, root):
@@ -78,6 +80,36 @@ def get_svhn(args, root):
                                     transform=TransformFixMatch(mean=svhn_mean, std=svhn_std))
 
   test_dataset = datasets.SVHN(root, split="test", transform=transform_val, download=True)
+
+  return train_labeled_dataset, train_unlabeled_dataset, test_dataset
+
+
+def get_stl10(args, root):
+  transform_labeled = transforms.Compose([
+      transforms.RandomHorizontalFlip(),
+      transforms.RandomCrop(size=32, padding=int(32 * 0.125), padding_mode='reflect'),
+      transforms.ToTensor(),
+      transforms.Normalize(mean=stl10_mean, std=stl10_std)
+  ])
+  transform_val = transforms.Compose(
+      [transforms.ToTensor(),
+       transforms.Normalize(mean=stl10_mean, std=stl10_std)])
+  base_dataset = datasets.STL10(root, split="train", download=True)
+
+  train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.labels)
+
+  train_labeled_dataset = STL10SSL(root,
+                                  train_labeled_idxs,
+                                  split="train",
+                                  transform=transform_labeled)
+
+  train_unlabeled_dataset = STL10SSL(root,
+                                     train_unlabeled_idxs,
+                                     split="train",
+                                     unlabeled=True,
+                                     transform=TransformFixMatch(mean=stl10_mean, std=stl10_std))
+
+  test_dataset = datasets.STL10(root, split="test", transform=transform_val, download=True)
 
   return train_labeled_dataset, train_unlabeled_dataset, test_dataset
 
@@ -242,6 +274,44 @@ class SVHNSSL(datasets.SVHN):
     return img, target
 
 
+class STL10SSL(datasets.STL10):
+
+  def __init__(self,
+               root,
+               indexs,
+               split="train",
+               unlabeled=False
+               transform=None,
+               target_transform=None,
+               download=False):
+    super().__init__(root,
+                     split=split,
+                     transform=transform,
+                     target_transform=target_transform,
+                     download=download)
+    if indexs is not None:
+      self.data = self.data[indexs]
+      self.labels = np.array(self.labels)[indexs]
+    self.labels = self.labels.astype(np.int64)
+    if unlabeled:
+      unlabeled_dataset = super().__init__(root, split="unlabeled", download=True)
+      self.data = np.concatenate([unlabeled_dataset.data, self.data])
+      self.labels = np.concatenate([[None for _ in range(len(unlabeled_dataset.data))], self.labels])
+    self.data = self.data.transpose([0, 2, 3, 1])
+
+  def __getitem__(self, index):
+    img, target = self.data[index], self.labels[index]
+    img = Image.fromarray(img)
+
+    if self.transform is not None:
+      img = self.transform(img)
+
+    if self.target_transform is not None:
+      target = self.target_transform(target)
+
+    return img, target
+
+
 class PseudoSSL(Dataset):
 
   def __init__(self,
@@ -262,4 +332,5 @@ class PseudoSSL(Dataset):
 DATASET_GETTERS = {'cifar10': get_cifar10,
                    'cifar100': get_cifar100,
                    'svhn': get_svhn,
+                   'stl-10': get_stl_10,
                    'pseudossl': PseudoSSL}
