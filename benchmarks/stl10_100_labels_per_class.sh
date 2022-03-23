@@ -1,0 +1,1 @@
+python ../tempmatch/train.py --dataset stl10 --num-labeled 1000 --arch wideresnet --batch-size 64 --lr 0.03 --expand-labels --out model_checkpoints/stl10@1000
