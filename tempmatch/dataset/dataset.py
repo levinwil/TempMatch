@@ -292,12 +292,12 @@ class STL10SSL(datasets.STL10):
     if indexs is not None:
       self.data = self.data[indexs]
       self.labels = np.array(self.labels)[indexs]
-    self.labels = self.labels.astype(np.int64)
     if unlabeled:
       unlabeled_dataset = datasets.STL10(root, split="unlabeled", download=True)
       self.data = np.concatenate([unlabeled_dataset.data, self.data])
-      self.labels = np.concatenate([[None for _ in range(len(unlabeled_dataset.data))], self.labels])
+      self.labels = np.concatenate([[-1 for _ in range(len(unlabeled_dataset.data))], self.labels])
     self.data = self.data.transpose([0, 2, 3, 1])
+    self.labels = self.labels.astype(np.int64)
 
   def __getitem__(self, index):
     img, target = self.data[index], self.labels[index]
