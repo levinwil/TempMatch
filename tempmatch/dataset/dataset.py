@@ -280,7 +280,7 @@ class STL10SSL(datasets.STL10):
                root,
                indexs,
                split="train",
-               unlabeled=False
+               unlabeled=False,
                transform=None,
                target_transform=None,
                download=False):
