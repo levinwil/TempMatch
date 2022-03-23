@@ -201,6 +201,16 @@ def main():
       args.model_depth = 29
       args.model_width = 64
 
+  if args.dataset == 'svhn':
+    args.num_classes = 10
+    if args.arch == 'wideresnet':
+      args.model_depth = 28
+      args.model_width = 2
+    elif args.arch == 'resnext':
+      args.model_cardinality = 4
+      args.model_depth = 28
+      args.model_width = 4
+
   if args.local_rank not in [-1, 0]:
     torch.distributed.barrier()
 

@@ -63,7 +63,7 @@ def get_svhn(args, root):
   transform_val = transforms.Compose(
       [transforms.ToTensor(),
        transforms.Normalize(mean=svhn_mean, std=svhn_std)])
-  base_dataset = datasets.CIFAR10(root, train=True, download=True)
+  base_dataset = datasets.SVHN(root, train=True, download=True)
 
   train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.targets)
 
