@@ -260,5 +260,5 @@ class PseudoSSL(Dataset):
 
 DATASET_GETTERS = {'cifar10': get_cifar10,
                    'cifar100': get_cifar100,
-                   'svhn': get_svhn
+                   'svhn': get_svhn,
                    'pseudossl': PseudoSSL}
