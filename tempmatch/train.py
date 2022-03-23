@@ -17,7 +17,7 @@ from torch.utils.data.distributed import DistributedSampler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
-from dataset.cifar import DATASET_GETTERS
+from dataset.dataset import DATASET_GETTERS
 from utils import AverageMeter, accuracy
 
 from utils.temperature_scaling import ModelWithTemperature
