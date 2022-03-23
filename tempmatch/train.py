@@ -74,7 +74,7 @@ def main():
   parser.add_argument('--num-workers', type=int, default=4,
                       help='number of workers')
   parser.add_argument('--dataset', default='cifar10', type=str,
-                      choices=['cifar10', 'cifar100'],
+                      choices=['cifar10', 'cifar100', 'svhn'],
                       help='dataset name')
   parser.add_argument('--num-labeled', type=int, default=4000,
                       help='number of labeled data')
