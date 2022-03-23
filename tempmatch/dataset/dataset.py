@@ -77,7 +77,7 @@ def get_svhn(args, root):
                                     split="train",
                                     transform=TransformFixMatch(mean=svhn_mean, std=svhn_std))
 
-  test_dataset = datasets.SVHN(root, split="test", transform=transform_val, download=False)
+  test_dataset = datasets.SVHN(root, split="test", transform=transform_val, download=True)
 
   return train_labeled_dataset, train_unlabeled_dataset, test_dataset
 
