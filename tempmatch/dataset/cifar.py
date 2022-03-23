@@ -63,21 +63,21 @@ def get_svhn(args, root):
   transform_val = transforms.Compose(
       [transforms.ToTensor(),
        transforms.Normalize(mean=svhn_mean, std=svhn_std)])
-  base_dataset = datasets.SVHN(root, train=True, download=True)
+  base_dataset = datasets.SVHN(root, split="train", download=True)
 
   train_labeled_idxs, train_unlabeled_idxs = x_u_split(args, base_dataset.targets)
 
   train_labeled_dataset = SVHNSSL(root,
-                                     train_labeled_idxs,
-                                     train=True,
-                                     transform=transform_labeled)
+                                  train_labeled_idxs,
+                                  split="train",
+                                  transform=transform_labeled)
 
   train_unlabeled_dataset = SVHNSSL(root,
                                     train_unlabeled_idxs,
-                                    train=True,
+                                    split="train",
                                     transform=TransformFixMatch(mean=svhn_mean, std=svhn_std))
 
-  test_dataset = datasets.SVHN(root, train=False, transform=transform_val, download=False)
+  test_dataset = datasets.SVHN(root, split="test", transform=transform_val, download=False)
 
   return train_labeled_dataset, train_unlabeled_dataset, test_dataset
 
