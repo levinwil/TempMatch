@@ -215,12 +215,12 @@ class SVHNSSL(datasets.SVHN):
   def __init__(self,
                root,
                indexs,
-               train=True,
+               split="train",
                transform=None,
                target_transform=None,
                download=False):
     super().__init__(root,
-                     train=train,
+                     split=split,
                      transform=transform,
                      target_transform=target_transform,
                      download=download)
